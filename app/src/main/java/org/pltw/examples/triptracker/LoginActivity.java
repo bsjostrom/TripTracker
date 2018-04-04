@@ -27,9 +27,27 @@ public class LoginActivity extends AppCompatActivity {
         mSignUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                
+
+                // Switches from Sign up page to Log In Page
+                if(mSignMeUpButton.getVisibility() == View.VISIBLE) {
+                    mEnterName.setVisibility(View.GONE);
+                    mSignMeUpButton.setVisibility(View.GONE);
+                    mLogIn.setVisibility(View.VISIBLE);
+                    mSignUpTextView.setText("Sign Up!");
+
+                    // Switches from Log In page to Sign Up page
+                } else if(mLogIn.getVisibility() == View.VISIBLE) {
+                    mEnterName.setVisibility(View.VISIBLE);
+                    mSignMeUpButton.setVisibility(View.VISIBLE);
+                    mLogIn.setVisibility(View.GONE);
+                    mSignUpTextView.setText("Cancel Sign Up");
+
+                }
             }
+
         });
+
+
 
 
     }
