@@ -5,8 +5,14 @@
     <string name="password_hint">Password</string>
     <string name="login_button_label">LOG IN</string>
     <string name="sign_up_text">Sign Up!</string>
+    <string name="cancel_sign_up_text">Cancel Sign Up</string>
     <string name="name">Name</string>
     <string name="sign_up_button_label">Sign Me Up</string>
 
+    <string name="BE_APP_ID">67B8C07D-9F14-5769-FFFC-90A74257E900</string>
+    <string name="BE_ANDROID_API_KEY">09FFFF28-08E4-3789-FF54-4526D7474800</string>
+
+    <string name="authentication_error_title">User Authentication Error!</string>
+    <string name="empty_field_signup_error">Be sure you have entered a valid email address, password, and name.</string>
 
 </resources>
