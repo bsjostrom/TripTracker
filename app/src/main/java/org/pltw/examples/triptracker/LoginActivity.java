@@ -24,6 +24,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEnterEmail;
     private EditText mEnterPassword;
 
+    private String WarnUserMessage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -172,6 +174,16 @@ public class LoginActivity extends AppCompatActivity {
 
 
         });
+
+        public String warnUser(String WarnUserMessage) {
+            this.WarnUserMessage = WarnUserMessage;
+            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+            builder.setMessage(WarnUserMessage);
+            builder.setTitle(R.string.authentication_error_title);
+            builder.setPositiveButton(android.R.string.ok, null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
 
 
 
