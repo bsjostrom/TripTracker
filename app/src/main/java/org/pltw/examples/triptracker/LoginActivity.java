@@ -117,6 +117,62 @@ public class LoginActivity extends AppCompatActivity {
 
         });
 
+        mLogIn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String userEmail = mEnterEmail.getText().toString();
+                String password = mEnterPassword.getText().toString();
+
+                userEmail = userEmail.trim();
+                password = password.trim();
+
+
+                if (!userEmail.isEmpty() &&!password.isEmpty()) {
+
+                    Backendless.UserService.login(userEmail, password,
+                            new AsyncCallback<BackendlessUser>() {
+                                @Override
+                                public void handleResponse( BackendlessUser backendlessUser ) {
+                                    Log.i(TAG, "Login successful for " +
+                                            backendlessUser.getEmail());
+
+                                    // This code is unnecessary, implemented because of laziness
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                    builder.setMessage("Login Successful!");
+                                    builder.setPositiveButton(android.R.string.ok, null);
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
+                                    // End code block
+                                }
+                                @Override
+                                public void handleFault( BackendlessFault fault ) {
+                                    Log.i(TAG, "Login failed: " + fault.getMessage());
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                                    builder.setMessage(fault.getMessage());
+                                    builder.setTitle(R.string.authentication_error_title);
+                                    builder.setPositiveButton(android.R.string.ok, null);
+                                    AlertDialog dialog = builder.create();
+                                    dialog.show();
+                                }
+                            } );
+
+                }
+                else {
+                    /* warn the user of the problem */
+                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+                    builder.setMessage(R.string.empty_field_signup_error);
+                    builder.setTitle(R.string.authentication_error_title);
+                    builder.setPositiveButton(android.R.string.ok, null);
+                    AlertDialog dialog = builder.create();
+                    dialog.show();
+
+                }
+            }
+
+
+        });
+
 
 
 
