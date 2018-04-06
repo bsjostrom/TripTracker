@@ -14,5 +14,5 @@
 
     <string name="authentication_error_title">User Authentication Error!</string>
     <string name="empty_field_signup_error">Be sure you have entered a valid email address, password, and name.</string>
-
+    <string name="data_not_validated">Email must include: "@" and ".". Password must be at least 6 characters long. Email and password cannot match.</string>
 </resources>

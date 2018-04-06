@@ -24,7 +24,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEnterEmail;
     private EditText mEnterPassword;
 
-    private String WarnUserMessage;
+    private boolean validateData = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,6 +78,20 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (!userEmail.isEmpty() &&!password.isEmpty() && !name.isEmpty()) {
 
+                    if (userEmail.contains("@") && userEmail.contains(".")){
+                        if (password.length()>= 6){
+                            if (!password.equals(userEmail)){
+                                validateData = true;
+                            }
+                        }
+                        }
+                        else{
+                        validateData = false;
+                        warnUser(getString(R.string.data_not_validated));
+                    }
+
+
+                    if(validateData = true){} //ended here
                     /* register the user in Backendless */
                     BackendlessUser user = new BackendlessUser();
                     user.setEmail(userEmail);
@@ -94,25 +108,15 @@ public class LoginActivity extends AppCompatActivity {
                                 @Override
                                 public void handleFault( BackendlessFault fault ) {
                                     Log.i(TAG, "Registration failed: " + fault.getMessage());
+                                    warnUser(fault.getMessage());
 
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                    builder.setMessage(fault.getMessage());
-                                    builder.setTitle(R.string.authentication_error_title);
-                                    builder.setPositiveButton(android.R.string.ok, null);
-                                    AlertDialog dialog = builder.create();
-                                    dialog.show();
                                 }
                             } );
 
                 }
                 else {
                     /* warn the user of the problem */
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setMessage(R.string.empty_field_signup_error);
-                    builder.setTitle(R.string.authentication_error_title);
-                    builder.setPositiveButton(android.R.string.ok, null);
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
+                   warnUser(getString(R.string.empty_field_signup_error));
 
                 }
             }
@@ -137,56 +141,32 @@ public class LoginActivity extends AppCompatActivity {
                                 public void handleResponse( BackendlessUser backendlessUser ) {
                                     Log.i(TAG, "Login successful for " +
                                             backendlessUser.getEmail());
-
-                                    // This code is unnecessary, implemented because of laziness
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                    builder.setMessage("Login Successful!");
-                                    builder.setPositiveButton(android.R.string.ok, null);
-                                    AlertDialog dialog = builder.create();
-                                    dialog.show();
-                                    // End code block
+                                    //unnecessary line of code below, implemented for ease
+                                    warnUser("Login Successful!");
                                 }
                                 @Override
                                 public void handleFault( BackendlessFault fault ) {
                                     Log.i(TAG, "Login failed: " + fault.getMessage());
+                                    warnUser(fault.getMessage());
 
-                                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                                    builder.setMessage(fault.getMessage());
-                                    builder.setTitle(R.string.authentication_error_title);
-                                    builder.setPositiveButton(android.R.string.ok, null);
-                                    AlertDialog dialog = builder.create();
-                                    dialog.show();
                                 }
                             } );
 
                 }
                 else {
-                    /* warn the user of the problem */
-                    AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                    builder.setMessage(R.string.empty_field_signup_error);
-                    builder.setTitle(R.string.authentication_error_title);
-                    builder.setPositiveButton(android.R.string.ok, null);
-                    AlertDialog dialog = builder.create();
-                    dialog.show();
-
+                    warnUser(getString(R.string.empty_field_signup_error));
                 }
             }
-
-
         });
 
-        public String warnUser(String WarnUserMessage) {
-            this.WarnUserMessage = WarnUserMessage;
-            AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-            builder.setMessage(WarnUserMessage);
-            builder.setTitle(R.string.authentication_error_title);
-            builder.setPositiveButton(android.R.string.ok, null);
-            AlertDialog dialog = builder.create();
-            dialog.show();
-        }
 
-
-
-
+    }
+    public String warnUser(String WarnUserMessage) {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setMessage(WarnUserMessage);
+        builder.setTitle(R.string.authentication_error_title);
+        builder.setPositiveButton(android.R.string.ok, null);
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 }
