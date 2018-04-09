@@ -18,4 +18,6 @@
     <string name="password_not_validated">Password must be at least 6 characters long.</string>
     <string name="match_not_validated">Email and password cannot match.</string>
     <string name="registration_successful">Registration Successful!</string>
+    <string name="please_wait">Please Wait!</string>
+    <string name="creating_account">Creating a new account...</string>
 </resources>

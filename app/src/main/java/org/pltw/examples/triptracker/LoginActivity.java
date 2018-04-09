@@ -1,6 +1,7 @@
 package org.pltw.examples.triptracker;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -25,6 +26,9 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEnterPassword;
 
     private boolean validateData = false;
+    boolean valid = true;
+
+    private String passwordMessage;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
         mSignUpTextView = (TextView) findViewById(R.id.sign_up_text);
         mEnterEmail = (EditText) findViewById(R.id.enter_email);
         mEnterPassword = (EditText) findViewById(R.id.enter_password);
+
+
 
         mSignUpTextView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -76,16 +82,48 @@ public class LoginActivity extends AppCompatActivity {
                 password = password.trim();
                 name = name.trim();
 
+                String upperCaseChars = "(.*[A-Z].*)";
+                String lowerCaseChars = "(.*[a-z].*)";
+                String numbers = "(.*[0-9].*)";
+                String specialChars = "(.*[,~,!,@,#,$,%,^,&,*,(,),-,_,=,+,[,{,],},|,;,:,<,>,/,?].*$)";
+
                 if (!userEmail.isEmpty() &&!password.isEmpty() && !name.isEmpty()) {
 
                     if (!userEmail.contains("@") || !userEmail.contains(".")) {
                         validateData = false;
                         warnUser(getString(R.string.email_not_validated));
                     }
-                     else if (password.length() <= 6){
+
+                    else if (password.length() < 6)
+                    {
+                        warnUser("Password should be at least 6 characters long.");
                         validateData = false;
-                        warnUser(getString(R.string.password_not_validated));
                     }
+
+                    else if (!password.matches(upperCaseChars ))
+                    {
+                        warnUser("Password should contain at least one upper case letter");
+                        validateData = false;
+                    }
+
+                    else if (!password.matches(lowerCaseChars))
+                    {
+                        warnUser("Password should contain at least one lower case letter");
+                        validateData = false;
+                    }
+
+                    else if (!password.matches(numbers ))
+                    {
+                        warnUser("Password should contain at least one number.");
+                        validateData = false;
+                    }
+
+                    else if (!password.matches(specialChars ))
+                    {
+                        warnUser("Password should contain at least one special character");
+                        validateData = false;
+                    }
+
                     else if (password.equals(userEmail)){
                         validateData = false;
                         warnUser(getString(R.string.match_not_validated));
@@ -113,6 +151,12 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }
                             } );
+                       /* final ProgressDialog pDialog = ProgressDialog.show(LoginActivity.this,  //These lines of code aren't being run
+                                getString(R.string.please_wait),
+                                getString(R.string.creating_account),
+                                true);
+                        pDialog.dismiss();
+                        Log.i(TAG, "Running the please wait dialog box");*/
 
                 }}
                 else {
@@ -121,6 +165,7 @@ public class LoginActivity extends AppCompatActivity {
 
                 }
             }
+
 
         });
 
@@ -152,6 +197,12 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }
                             } );
+                   /* final ProgressDialog pDialog = ProgressDialog.show(LoginActivity.this,  //These lines of code aren't being run??
+                            getString(R.string.please_wait),
+                            getString(R.string.creating_account),
+                            true);
+                    pDialog.dismiss();
+                    Log.i(TAG, "Running the please wait dialog box");*/
 
                 }
                 else {
@@ -162,6 +213,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     }
+
     public String warnUser(String WarnUserMessage) {
         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
         builder.setMessage(WarnUserMessage);
@@ -171,4 +223,6 @@ public class LoginActivity extends AppCompatActivity {
         dialog.show();
         return "Return Statement?";
     }
+
+
 }
