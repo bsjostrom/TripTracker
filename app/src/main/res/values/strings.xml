@@ -12,7 +12,10 @@
     <string name="BE_APP_ID">67B8C07D-9F14-5769-FFFC-90A74257E900</string>
     <string name="BE_ANDROID_API_KEY">09FFFF28-08E4-3789-FF54-4526D7474800</string>
 
-    <string name="authentication_error_title">User Authentication Error!</string>
+    <string name="authentication_error_title">User Authentication Notification!</string>
     <string name="empty_field_signup_error">Be sure you have entered a valid email address, password, and name.</string>
-    <string name="data_not_validated">Email must include: "@" and ".". Password must be at least 6 characters long. Email and password cannot match.</string>
+    <string name="email_not_validated">Email must include: \"@\" and \".\". </string>
+    <string name="password_not_validated">Password must be at least 6 characters long.</string>
+    <string name="match_not_validated">Email and password cannot match.</string>
+    <string name="registration_successful">Registration Successful!</string>
 </resources>

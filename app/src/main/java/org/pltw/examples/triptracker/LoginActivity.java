@@ -78,20 +78,20 @@ public class LoginActivity extends AppCompatActivity {
 
                 if (!userEmail.isEmpty() &&!password.isEmpty() && !name.isEmpty()) {
 
-                    if (userEmail.contains("@") && userEmail.contains(".")){
-                        if (password.length()>= 6){
-                            if (!password.equals(userEmail)){
-                                validateData = true;
-                            }
-                        }
-                        }
-                        else{
+                    if (!userEmail.contains("@") || !userEmail.contains(".")) {
                         validateData = false;
-                        warnUser(getString(R.string.data_not_validated));
+                        warnUser(getString(R.string.email_not_validated));
                     }
+                     else if (password.length() <= 6){
+                        validateData = false;
+                        warnUser(getString(R.string.password_not_validated));
+                    }
+                    else if (password.equals(userEmail)){
+                        validateData = false;
+                        warnUser(getString(R.string.match_not_validated));
+                    }
+                else {
 
-
-                    if(validateData = true){} //ended here
                     /* register the user in Backendless */
                     BackendlessUser user = new BackendlessUser();
                     user.setEmail(userEmail);
@@ -104,6 +104,7 @@ public class LoginActivity extends AppCompatActivity {
                                 public void handleResponse( BackendlessUser backendlessUser ) {
                                     Log.i(TAG, "Registration successful for " +
                                             backendlessUser.getEmail());
+                                    warnUser(getString(R.string.registration_successful));
                                 }
                                 @Override
                                 public void handleFault( BackendlessFault fault ) {
@@ -113,7 +114,7 @@ public class LoginActivity extends AppCompatActivity {
                                 }
                             } );
 
-                }
+                }}
                 else {
                     /* warn the user of the problem */
                    warnUser(getString(R.string.empty_field_signup_error));
@@ -168,5 +169,6 @@ public class LoginActivity extends AppCompatActivity {
         builder.setPositiveButton(android.R.string.ok, null);
         AlertDialog dialog = builder.create();
         dialog.show();
+        return "Return Statement?";
     }
 }
