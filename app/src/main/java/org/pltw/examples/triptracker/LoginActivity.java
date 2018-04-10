@@ -1,7 +1,7 @@
 package org.pltw.examples.triptracker;
 
 import android.app.AlertDialog;
-import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -158,6 +158,10 @@ public class LoginActivity extends AppCompatActivity {
                         pDialog.dismiss();
                         Log.i(TAG, "Running the please wait dialog box");*/
 
+                        Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
+                        startActivity(intent);
+                        Log.i(TAG, "App should start over here.");
+
                 }}
                 else {
                     /* warn the user of the problem */
@@ -188,7 +192,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.i(TAG, "Login successful for " +
                                             backendlessUser.getEmail());
                                     //unnecessary line of code below, implemented for ease
-                                    warnUser("Login Successful!");
+                                    //warnUser("Login Successful!");
                                 }
                                 @Override
                                 public void handleFault( BackendlessFault fault ) {
@@ -197,12 +201,17 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }
                             } );
+
+
                    /* final ProgressDialog pDialog = ProgressDialog.show(LoginActivity.this,  //These lines of code aren't being run??
                             getString(R.string.please_wait),
                             getString(R.string.creating_account),
                             true);
                     pDialog.dismiss();
                     Log.i(TAG, "Running the please wait dialog box");*/
+
+                    Intent intent = new Intent(LoginActivity.this, TripListActivity.class);
+                    startActivity(intent);
 
                 }
                 else {

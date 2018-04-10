@@ -72,13 +72,13 @@ public class TripListFragment extends ListFragment {
     }
 
     public void onListItemClick(ListView l, View v, int position, long id) {
-        // get the Trip
+        // get the org.pltw.examples.triptracker.Trip
         Trip trip = (Trip)(getListAdapter()).getItem(position);
 
         // start an instance of TripActivity
         // pass parameters using the intent object: all the object attributes of the trip to be viewed/edited.
         // if we do not pass these in as parameters, then we will have to add code in the
-        // Trip screen to get the data from the back-end database.
+        // org.pltw.examples.triptracker.Trip screen to get the data from the back-end database.
         // But that will be more network traffic (slower!) Therefore, when we can avoid an extra trip to the server, we do that!
         Intent intent = new Intent(getActivity(), TripActivity.class);
         intent.putExtra(Trip.EXTRA_TRIP_ID, trip.getObjectId());

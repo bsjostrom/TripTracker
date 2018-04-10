@@ -1,6 +1,8 @@
+package org.pltw.examples.triptracker;
+
 import java.util.Date;
 
-public class Trip {
+public class Trip implements IntentData {
 private String objectId;
 private String name;
 private String description;
