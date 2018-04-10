@@ -184,8 +184,30 @@ public class TripFragment extends Fragment {
                     //save the data to Backendless
 					
 					// todo: Activity 3.1.3
+                    //NOT SURE THIS IS IN THE RIGHT PLACE
+                    // save on a new thread and wait for the save to finish
+                    Thread thread = new Thread(new Runnable() {
+                        @Override
+                        public void run() {
+                            Backendless.Data.of(Trip.class).save(mTrip);
+                        }
+                    });
+                    thread.start();
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        Log.e(TAG, "Saving trip failed: " + e.getMessage());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage(e.getMessage());
+                        builder.setTitle(R.string.trip_error_title);
+                        builder.setPositiveButton(android.R.string.ok, null);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
 
-                    
+                    //updateTrip();
+
+
 
 
                 }
