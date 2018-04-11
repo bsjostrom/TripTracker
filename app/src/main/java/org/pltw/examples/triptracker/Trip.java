@@ -9,6 +9,13 @@ private String description;
 private Date startDate;
 private Date endDate;
 
+    public Trip() {
+        //set default values
+        this.setStartDate(new Date());
+        this.setEndDate(new Date());
+
+    }
+
     public String getObjectId() {
         return objectId;
     }

@@ -20,9 +20,11 @@
     <string name="registration_successful">Registration Successful!</string>
     <string name="please_wait">Please Wait!</string>
     <string name="creating_account">Creating a new account...</string>
+    <string name="logging_in">Logging into your account...</string>
 
     <!-- 3.1.3 fragment_trip_list -->
     <string name="trip_list_text">Trip List</string>
+    <string name="trip_activity_text">Trip Activity</string>
 
     <!-- 3.1.3 fragment_trip -->
     <string name="trip_details_text">Trip Details</string>

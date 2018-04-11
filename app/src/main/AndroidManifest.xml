@@ -30,6 +30,10 @@
             android:name=".TripListActivity"
             android:label="@string/trip_list_text" >
         </activity>
+        <activity
+            android:name=".TripActivity"
+            android:label="@string/trip_activity_text" >
+        </activity>
     </application>
 
 </manifest>

@@ -5,9 +5,9 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.text.format.DateFormat;
 import android.widget.ProgressBar;
 
 import com.backendless.Backendless;
@@ -173,6 +172,9 @@ public class TripFragment extends Fragment {
                 return true;
             case R.id.action_post:
                 //check if the trip is enabled for editing
+
+                // LOOK HERE FOR 04/11
+                //At this point, the trip will go to backendless, but the data for the trip does not. Look at steps 31-35ish. Finish for Friday. Start 3.1.4.
                 if (!mEnabled) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage(R.string.post_error_message);
@@ -182,11 +184,11 @@ public class TripFragment extends Fragment {
                     dialog.show();
                 } else {
                     //save the data to Backendless
-					
 					// todo: Activity 3.1.3
                     //NOT SURE THIS IS IN THE RIGHT PLACE
                     // save on a new thread and wait for the save to finish
-                    Thread thread = new Thread(new Runnable() {
+                   Thread thread = new Thread(new Runnable() {
+
                         @Override
                         public void run() {
                             Backendless.Data.of(Trip.class).save(mTrip);
@@ -205,7 +207,7 @@ public class TripFragment extends Fragment {
                         dialog.show();
                     }
 
-                    //updateTrip();
+                    //update trip here?
 
 
 
@@ -317,6 +319,27 @@ public class TripFragment extends Fragment {
 
             //  save the trip in backendless
             //  todo: Activity 3.1.3
+
+            mTrip.setName(name);
+            mTrip.setDescription(desc);
+            mTrip.setStartDate(sDate);
+            mTrip.setEndDate(eDate);
+            //mTrip.isShared(shared);
+
+
+            Backendless.Persistence
+                    .of(Trip.class).save(mTrip, new AsyncCallback<Trip>() {
+                @Override
+                public void handleResponse(Trip response) {
+                    Log.i(TAG, "Saved Trip to Backendless" + mTrip.getObjectId());
+                }
+                public void handleFault(BackendlessFault fault) {
+                    Log.i(TAG, "Failed to save Trip!" + fault.getMessage());
+                }
+            });
+
+
+
 
         }
     }

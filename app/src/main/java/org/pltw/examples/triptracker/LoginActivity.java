@@ -1,6 +1,7 @@
 package org.pltw.examples.triptracker;
 
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -26,7 +27,6 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEnterPassword;
 
     private boolean validateData = false;
-    boolean valid = true;
 
     private String passwordMessage;
 
@@ -136,27 +136,30 @@ public class LoginActivity extends AppCompatActivity {
                     user.setPassword(password);
                     user.setProperty("name", name);
 
+
+                   final ProgressDialog pDialog = ProgressDialog.show(LoginActivity.this,
+                            getString(R.string.please_wait),
+                            getString(R.string.creating_account),
+                            true);
+                    Log.i(TAG, "Running the please wait dialog box");
+
                     Backendless.UserService.register(user,
                             new AsyncCallback<BackendlessUser>() {
                                 @Override
                                 public void handleResponse( BackendlessUser backendlessUser ) {
                                     Log.i(TAG, "Registration successful for " +
                                             backendlessUser.getEmail());
+                                    pDialog.dismiss();
                                     warnUser(getString(R.string.registration_successful));
                                 }
                                 @Override
                                 public void handleFault( BackendlessFault fault ) {
                                     Log.i(TAG, "Registration failed: " + fault.getMessage());
+                                    pDialog.dismiss();
                                     warnUser(fault.getMessage());
 
                                 }
                             } );
-                       /* final ProgressDialog pDialog = ProgressDialog.show(LoginActivity.this,  //These lines of code aren't being run
-                                getString(R.string.please_wait),
-                                getString(R.string.creating_account),
-                                true);
-                        pDialog.dismiss();
-                        Log.i(TAG, "Running the please wait dialog box");*/
 
                         Intent intent = new Intent(LoginActivity.this, LoginActivity.class);
                         startActivity(intent);
@@ -182,6 +185,12 @@ public class LoginActivity extends AppCompatActivity {
                 userEmail = userEmail.trim();
                 password = password.trim();
 
+                final ProgressDialog pDialog = ProgressDialog.show(LoginActivity.this,
+                                getString(R.string.please_wait),
+                                getString(R.string.logging_in),
+                                true);
+                        Log.i(TAG, "Running the please wait dialog box");
+
 
                 if (!userEmail.isEmpty() &&!password.isEmpty()) {
 
@@ -191,24 +200,20 @@ public class LoginActivity extends AppCompatActivity {
                                 public void handleResponse( BackendlessUser backendlessUser ) {
                                     Log.i(TAG, "Login successful for " +
                                             backendlessUser.getEmail());
+                                    pDialog.dismiss();
                                     //unnecessary line of code below, implemented for ease
                                     //warnUser("Login Successful!");
                                 }
                                 @Override
                                 public void handleFault( BackendlessFault fault ) {
                                     Log.i(TAG, "Login failed: " + fault.getMessage());
+                                    pDialog.dismiss();
                                     warnUser(fault.getMessage());
 
                                 }
                             } );
 
 
-                   /* final ProgressDialog pDialog = ProgressDialog.show(LoginActivity.this,  //These lines of code aren't being run??
-                            getString(R.string.please_wait),
-                            getString(R.string.creating_account),
-                            true);
-                    pDialog.dismiss();
-                    Log.i(TAG, "Running the please wait dialog box");*/
 
                     Intent intent = new Intent(LoginActivity.this, TripListActivity.class);
                     startActivity(intent);

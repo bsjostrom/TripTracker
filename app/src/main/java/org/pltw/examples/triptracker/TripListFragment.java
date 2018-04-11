@@ -3,7 +3,6 @@ package org.pltw.examples.triptracker;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -15,7 +14,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 
 import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
@@ -131,12 +129,16 @@ public class TripListFragment extends ListFragment {
                 return true;
 
             case R.id.action_new:
+                Log.i(TAG,"New Trip Checkpoint 1 is being run.");
                 //start the TripActivity and send it the trip_id value of 0, indicating a new trip to be added
                 intent = new Intent(getActivity(), TripActivity.class);
                 intent.putExtra(Trip.EXTRA_TRIP_ID, "0");
+                Log.i(TAG,"New Trip Checkpoint 2 is being run.");
                 //To navigate the user back to the same list view (Public Trips or My Trips) after saving the new trip, send the PUBLIC_VIEW as an intent extra
                 intent.putExtra(Trip.EXTRA_TRIP_PUBLIC_VIEW, mPublicView);
+                Log.i(TAG,"New Trip Checkpoint 3 is being run.");
                 startActivity(intent);
+                Log.i(TAG,"New Trip Checkpoint 4 is being run.");
                 return true;
 
 			// todo: Activity 3.1.6
