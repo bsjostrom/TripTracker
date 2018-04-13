@@ -3,6 +3,7 @@ package org.pltw.examples.triptracker;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.icu.text.SimpleDateFormat;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -24,7 +25,6 @@ import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 
@@ -175,6 +175,7 @@ public class TripFragment extends Fragment {
 
                 // LOOK HERE FOR 04/11
                 //At this point, the trip will go to backendless, but the data for the trip does not. Look at steps 31-35ish. Finish for Friday. Start 3.1.4.
+                // Also fix ASCII statements.
                 if (!mEnabled) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
                     builder.setMessage(R.string.post_error_message);
@@ -185,7 +186,7 @@ public class TripFragment extends Fragment {
                 } else {
                     //save the data to Backendless
 					// todo: Activity 3.1.3
-                    //NOT SURE THIS IS IN THE RIGHT PLACE
+
                     // save on a new thread and wait for the save to finish
                    Thread thread = new Thread(new Runnable() {
 
@@ -206,11 +207,7 @@ public class TripFragment extends Fragment {
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
-
-                    //update trip here?
-
-
-
+                    updateTrip(item); //might need to move to after the todo 
 
                 }
 				return true;
@@ -250,6 +247,8 @@ public class TripFragment extends Fragment {
             default:
                 return super.onOptionsItemSelected(item);
         }
+
+
     }
 
     @Override
@@ -324,7 +323,7 @@ public class TripFragment extends Fragment {
             mTrip.setDescription(desc);
             mTrip.setStartDate(sDate);
             mTrip.setEndDate(eDate);
-            //mTrip.isShared(shared);
+            mTrip.setShared(shared);
 
 
             Backendless.Persistence
