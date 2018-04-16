@@ -17,10 +17,13 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.backendless.Backendless;
+import com.backendless.BackendlessUser;
 import com.backendless.async.callback.AsyncCallback;
 import com.backendless.exceptions.BackendlessFault;
+import com.backendless.persistence.DataQueryBuilder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /*
  * Created by klaidley on 4/13/2015.
@@ -62,17 +65,17 @@ public class TripListFragment extends ListFragment {
         View v = inflater.inflate(R.layout.fragment_trip_list, parent, false);
 
         //register the context menu
-        ListView listView = (ListView)v.findViewById(android.R.id.list);
+        ListView listView = (ListView) v.findViewById(android.R.id.list);
         registerForContextMenu(listView);
-		
-		// todo: Activity 3.1.8
+
+        // todo: Activity 3.1.8
 
         return v;
     }
 
     public void onListItemClick(ListView l, View v, int position, long id) {
         // get the org.pltw.examples.triptracker.Trip
-        Trip trip = (Trip)(getListAdapter()).getItem(position);
+        Trip trip = (Trip) (getListAdapter()).getItem(position);
 
         // start an instance of TripActivity
         // pass parameters using the intent object: all the object attributes of the trip to be viewed/edited.
@@ -87,7 +90,7 @@ public class TripListFragment extends ListFragment {
         intent.putExtra(Trip.EXTRA_TRIP_END_DATE, trip.getEndDate());
         intent.putExtra(Trip.EXTRA_TRIP_PUBLIC, trip.isShared());
         intent.putExtra(Trip.EXTRA_TRIP_PUBLIC_VIEW, mPublicView);
-		
+
         // todo: Activity 3.1.5
     }
 
@@ -100,9 +103,9 @@ public class TripListFragment extends ListFragment {
 
     @Override
     public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo)item.getMenuInfo();
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         int position = info.position;
-        TripAdapter adapter = (TripAdapter)getListAdapter();
+        TripAdapter adapter = (TripAdapter) getListAdapter();
         Trip trip = adapter.getItem(position);
 
         switch (item.getItemId()) {
@@ -125,8 +128,8 @@ public class TripListFragment extends ListFragment {
         Intent intent;
         switch (item.getItemId()) {
             case R.id.action_refresh:
-				// todo: Activity 3.1.8
-				
+                // todo: Activity 3.1.8
+
                 //refresh the list of trips
                 refreshTripList();
                 return true;
@@ -140,10 +143,10 @@ public class TripListFragment extends ListFragment {
                 startActivity(intent);
                 return true;
 
-			// todo: Activity 3.1.6
-			
+            // todo: Activity 3.1.6
+
             case R.id.action_logout:
-				// Logs user out and  resets Backendless CurrentUser to null
+                // Logs user out and  resets Backendless CurrentUser to null
                 Backendless.UserService.logout(new AsyncCallback<Void>() {
                     @Override
                     public void handleResponse(Void v) {
@@ -152,6 +155,7 @@ public class TripListFragment extends ListFragment {
                             Log.i(TAG, "Successful logout");
                         }
                     }
+
                     @Override
                     public void handleFault(BackendlessFault backendlessFault) {
                         Log.i(TAG, "Server reported an error " + backendlessFault.getMessage());
@@ -180,38 +184,61 @@ public class TripListFragment extends ListFragment {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
 
-			// todo: Activity 3.1.4
+            // todo: Activity 3.1.4
             if (convertView == null) {
-            convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_trip_list_item, null);
-        }
-        Trip t = getItem(position);
+                convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_trip_list_item, null);
+            }
+            Trip t = getItem(position);
 
             TextView startDateTextView =
-                    (TextView)convertView
+                    (TextView) convertView
                             .findViewById(R.id.trip_list_item_textStartDate);
 
             TextView nameTextView =
-                    (TextView)convertView
+                    (TextView) convertView
                             .findViewById(R.id.trip_list_item_textName);
 
             nameTextView.setText(t.getName());
-            //CAN'T RESOLVE THE STARTDATE todo: Monday
-            //startDateTextView.setText(t.getStartDate());
+            startDateTextView.setText(t.getStartDate().toString());
             return convertView;
+        }
+
+        private void deleteTrip(Trip trip) {
+
+            // todo: Activity 3.1.5
+
+        }
+
+        private void refreshTripList() {
+            BackendlessUser user = Backendless.UserService.CurrentUser();
+            // todo: Activity 3.1.4
+            String whereClause = "ownerId = ' " + user.getObjectId() + "'";
+            DataQueryBuilder query = DataQueryBuilder.create();
+            query.setWhereClause(whereClause);
+            Backendless.Persistence.of(Trip.class).find(query, new AsyncCallback<List<Trip>>() {
+                @Override
+                public void handleResponse(List<Trip> trip) {
+                    if (!trip.isEmpty()) {
+                        for (Trip t : trip) {
+                            if(!mTrips.contains(t)) {
+                                mTrips.add(t);
+                            }
+                        }
+                        ((TripAdapter)getListAdapter()).notifyDataSetChanged();
+
+                    } else {
+                        Log.i(TAG, "Query returned no trip.");
+                    }
+
+                }
+
+                @Override
+                public void handleFault(BackendlessFault fault) {
+                    Log.e(TAG, "Failed to find trip: " + fault.getMessage());
+                }
+            });
+
+
+        }
     }
-
-    private void deleteTrip(Trip trip) {
-
-		// todo: Activity 3.1.5
-
-    }
-
-    private void refreshTripList() {
-
-		// todo: Activity 3.1.4
-
-    }
-
-
-
 }

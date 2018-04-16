@@ -173,8 +173,6 @@ public class TripFragment extends Fragment {
             case R.id.action_post:
                 //check if the trip is enabled for editing
 
-                // LOOK HERE FOR 04/11
-                //At this point, the trip will go to backendless, but the data for the trip does not. Look at steps 31-35ish. Finish for Friday. Start 3.1.4.
                 // Also fix ASCII statements.
                 if (!mEnabled) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -207,7 +205,7 @@ public class TripFragment extends Fragment {
                         AlertDialog dialog = builder.create();
                         dialog.show();
                     }
-                    updateTrip(item); //might need to move to after the todo 
+                    updateTrip(item); //might need to move to after the to do
 
                 }
 				return true;
