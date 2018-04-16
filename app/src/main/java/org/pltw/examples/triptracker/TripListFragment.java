@@ -14,6 +14,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.backendless.Backendless;
 import com.backendless.async.callback.AsyncCallback;
@@ -92,7 +93,9 @@ public class TripListFragment extends ListFragment {
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
-      getActivity().getMenuInflater().inflate(R.menu.menu_trip_list_item_context, menu);
+
+        getActivity().getMenuInflater().inflate(R.menu.menu_trip_list_item_context, menu);
+
     }
 
     @Override
@@ -129,16 +132,12 @@ public class TripListFragment extends ListFragment {
                 return true;
 
             case R.id.action_new:
-                Log.i(TAG,"New Trip Checkpoint 1 is being run.");
                 //start the TripActivity and send it the trip_id value of 0, indicating a new trip to be added
                 intent = new Intent(getActivity(), TripActivity.class);
                 intent.putExtra(Trip.EXTRA_TRIP_ID, "0");
-                Log.i(TAG,"New Trip Checkpoint 2 is being run.");
                 //To navigate the user back to the same list view (Public Trips or My Trips) after saving the new trip, send the PUBLIC_VIEW as an intent extra
                 intent.putExtra(Trip.EXTRA_TRIP_PUBLIC_VIEW, mPublicView);
-                Log.i(TAG,"New Trip Checkpoint 3 is being run.");
                 startActivity(intent);
-                Log.i(TAG,"New Trip Checkpoint 4 is being run.");
                 return true;
 
 			// todo: Activity 3.1.6
@@ -182,9 +181,23 @@ public class TripListFragment extends ListFragment {
         public View getView(int position, View convertView, ViewGroup parent) {
 
 			// todo: Activity 3.1.4
-            return null;
-		
+            if (convertView == null) {
+            convertView = getActivity().getLayoutInflater().inflate(R.layout.fragment_trip_list_item, null);
         }
+        Trip t = getItem(position);
+
+            TextView startDateTextView =
+                    (TextView)convertView
+                            .findViewById(R.id.trip_list_item_textStartDate);
+
+            TextView nameTextView =
+                    (TextView)convertView
+                            .findViewById(R.id.trip_list_item_textName);
+
+            nameTextView.setText(t.getName());
+            //CAN'T RESOLVE THE STARTDATE todo: Monday
+            //startDateTextView.setText(t.getStartDate());
+            return convertView;
     }
 
     private void deleteTrip(Trip trip) {
