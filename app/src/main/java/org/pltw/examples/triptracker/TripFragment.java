@@ -222,7 +222,25 @@ public class TripFragment extends Fragment {
                     //delete the record from Backendless if it is an existing record
 
 					// todo: Activity 3.1.5
-					
+                    Thread thread = new Thread(new Runnable() {
+
+                        @Override
+                        public void deleteTrip(final Trip trip) {
+                            Backendless.Data.of(Trip.class).remove(mTrip);
+                        }
+                    });
+                    thread.start();
+                    try {
+                        thread.join();
+                    } catch (InterruptedException e) {
+                        Log.e(TAG, "Deleting trip failed: " + e.getMessage());
+                        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                        builder.setMessage(e.getMessage());
+                        builder.setTitle(R.string.trip_error_title);
+                        builder.setPositiveButton(android.R.string.ok, null);
+                        AlertDialog dialog = builder.create();
+                        dialog.show();
+                    }
                 }
 				return true;
             case R.id.action_logout:
@@ -334,6 +352,7 @@ public class TripFragment extends Fragment {
                     Log.i(TAG, "Failed to save Trip!" + fault.getMessage());
                 }
             });
+            getActivity().finish();
 
 
 

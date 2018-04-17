@@ -91,7 +91,9 @@ public class TripListFragment extends ListFragment {
         intent.putExtra(Trip.EXTRA_TRIP_PUBLIC, trip.isShared());
         intent.putExtra(Trip.EXTRA_TRIP_PUBLIC_VIEW, mPublicView);
 
+
         // todo: Activity 3.1.5
+        startActivity(intent);
     }
 
     @Override
@@ -111,6 +113,7 @@ public class TripListFragment extends ListFragment {
         switch (item.getItemId()) {
             case R.id.menu_item_delete_trip:
                 //delete the trip from the baas
+
                 deleteTrip(trip);
                 return true;
         }
@@ -209,36 +212,44 @@ public class TripListFragment extends ListFragment {
 
         }
 
-        private void refreshTripList() {
-            BackendlessUser user = Backendless.UserService.CurrentUser();
-            // todo: Activity 3.1.4
-            String whereClause = "ownerId = ' " + user.getObjectId() + "'";
-            DataQueryBuilder query = DataQueryBuilder.create();
-            query.setWhereClause(whereClause);
-            Backendless.Persistence.of(Trip.class).find(query, new AsyncCallback<List<Trip>>() {
-                @Override
-                public void handleResponse(List<Trip> trip) {
-                    if (!trip.isEmpty()) {
-                        for (Trip t : trip) {
-                            if(!mTrips.contains(t)) {
-                                mTrips.add(t);
-                            }
-                        }
-                        ((TripAdapter)getListAdapter()).notifyDataSetChanged();
 
-                    } else {
-                        Log.i(TAG, "Query returned no trip.");
+
+
+
+    }
+    private void refreshTripList() {
+        BackendlessUser user = Backendless.UserService.CurrentUser();
+        // todo: Activity 3.1.4
+        String whereClause = "ownerId = '" + user.getObjectId() + "'";
+        DataQueryBuilder query = DataQueryBuilder.create();
+        query.setWhereClause(whereClause);
+        Backendless.Persistence.of(Trip.class).find(query, new AsyncCallback<List<Trip>>() {
+            @Override
+            public void handleResponse(List<Trip> trip) {
+                mTrips.clear();
+                for (Trip t : trip) {
+                    if(!mTrips.contains(t)) {
+                        mTrips.add(t);
                     }
-
                 }
+                ((TripAdapter)getListAdapter()).notifyDataSetChanged();
 
-                @Override
-                public void handleFault(BackendlessFault fault) {
-                    Log.e(TAG, "Failed to find trip: " + fault.getMessage());
-                }
-            });
+            }
 
 
-        }
+            @Override
+            public void handleFault(BackendlessFault fault) {
+                Log.e(TAG, "Failed to find trip: " + fault.getMessage());
+            }
+        });
+
+
+
+    }
+
+    @Override
+    public void onResume() {
+        refreshTripList();
+        super.onResume();
     }
 }
