@@ -1,5 +1,6 @@
 package org.pltw.examples.triptracker;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
@@ -113,7 +114,6 @@ public class TripListFragment extends ListFragment {
         switch (item.getItemId()) {
             case R.id.menu_item_delete_trip:
                 //delete the trip from the baas
-
                 deleteTrip(trip);
                 return true;
         }
@@ -206,11 +206,7 @@ public class TripListFragment extends ListFragment {
             return convertView;
         }
 
-        private void deleteTrip(Trip trip) {
 
-            // todo: Activity 3.1.5
-
-        }
 
 
 
@@ -220,6 +216,7 @@ public class TripListFragment extends ListFragment {
     private void refreshTripList() {
         BackendlessUser user = Backendless.UserService.CurrentUser();
         // todo: Activity 3.1.4
+        Log.i(TAG, "User = " + user.toString());
         String whereClause = "ownerId = '" + user.getObjectId() + "'";
         DataQueryBuilder query = DataQueryBuilder.create();
         query.setWhereClause(whereClause);
@@ -251,5 +248,28 @@ public class TripListFragment extends ListFragment {
     public void onResume() {
         refreshTripList();
         super.onResume();
+    }
+    private void deleteTrip(final Trip trip) {
+
+        // todo: Activity 3.1.5
+       Thread thread = new Thread(new Runnable() {
+           @Override
+           public void run() {
+               Backendless.Data.of(Trip.class).remove(trip);
+           }
+       });
+       thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            Log.e(TAG, "Deleting trip failed: " + e.getMessage());
+            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+            builder.setMessage(e.getMessage());
+            builder.setTitle(R.string.trip_error_title);
+            builder.setPositiveButton(android.R.string.ok, null);
+            AlertDialog dialog = builder.create();
+            dialog.show();
+        }
+        refreshTripList();
     }
 }

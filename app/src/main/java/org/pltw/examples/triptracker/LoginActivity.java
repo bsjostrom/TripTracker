@@ -94,7 +94,7 @@ public class LoginActivity extends AppCompatActivity {
                         warnUser(getString(R.string.email_not_validated));
                     }
 
-                    else if (password.length() < 6)
+                   /* else if (password.length() < 6)
                     {
                         warnUser("Password should be at least 6 characters long.");
                         validateData = false;
@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                     {
                         warnUser("Password should contain at least one special character");
                         validateData = false;
-                    }
+                    }*/
 
                     else if (password.equals(userEmail)){
                         validateData = false;
@@ -184,8 +184,10 @@ public class LoginActivity extends AppCompatActivity {
 
                 userEmail = userEmail.trim();
                 password = password.trim();
+                Log.i(TAG, "Checkpoint 1 Passed");
 
                 final ProgressDialog pDialog = ProgressDialog.show(LoginActivity.this,
+
                                 getString(R.string.please_wait),
                                 getString(R.string.logging_in),
                                 true);
@@ -193,6 +195,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
                 if (!userEmail.isEmpty() &&!password.isEmpty()) {
+                    Log.i(TAG, "Checkpoint 2 Passed");
 
                     Backendless.UserService.login(userEmail, password,
                             new AsyncCallback<BackendlessUser>() {
@@ -201,8 +204,9 @@ public class LoginActivity extends AppCompatActivity {
                                     Log.i(TAG, "Login successful for " +
                                             backendlessUser.getEmail());
                                     pDialog.dismiss();
-                                    //unnecessary line of code below, implemented for ease
-                                    //warnUser("Login Successful!");
+                                    Intent intent = new Intent(LoginActivity.this, TripListActivity.class);
+                                    startActivity(intent);
+
                                 }
                                 @Override
                                 public void handleFault( BackendlessFault fault ) {
@@ -212,11 +216,7 @@ public class LoginActivity extends AppCompatActivity {
 
                                 }
                             } );
-
-
-
-                    Intent intent = new Intent(LoginActivity.this, TripListActivity.class);
-                    startActivity(intent);
+                    Log.i(TAG, "Checkpoint 3 passed");
 
                 }
                 else {
